@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item
+		android:id="@+id/action_chapters"
+		android:icon="@drawable/ic_list"
+		android:title="@string/chapters"
+		app:showAsAction="ifRoom" />
+
+	<item
+		android:id="@+id/action_theme"
+		android:title="@string/theme"
+		app:showAsAction="never" />
+
+	<item
+		android:id="@+id/action_font"
+		android:title="@string/novel_font"
+		app:showAsAction="never" />
+
+	<item
+		android:id="@+id/action_font_size_increase"
+		android:title="@string/novel_font_size_increase"
+		app:showAsAction="never" />
+
+	<item
+		android:id="@+id/action_font_size_decrease"
+		android:title="@string/novel_font_size_decrease"
+		app:showAsAction="never" />
+
+</menu>

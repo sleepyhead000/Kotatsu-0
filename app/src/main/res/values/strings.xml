@@ -63,7 +63,7 @@
     <string name="_import">Import</string>
     <string name="delete">Delete</string>
     <string name="operation_not_supported">This operation is not supported</string>
-    <string name="text_file_not_supported">Either pick a ZIP or CBZ file.</string>
+    <string name="text_file_not_supported">Either pick a ZIP, CBZ, EPUB or PDF file.</string>
     <string name="no_description">No description</string>
     <string name="clear_pages_cache">Clear page cache</string>
     <string name="text_file_sizes">B|kB|MB|GB|TB</string>
@@ -377,7 +377,7 @@
     <string name="sources_reorder_tip">Tap and hold on an item to reorder them</string>
     <string name="user_agent">UserAgent header</string>
     <string name="settings_apply_restart_required">Please restart the application to apply these changes</string>
-    <string name="comics_archive_import_description">You can select one or more .cbz or .zip files, each file will be recognized as a separate manga.</string>
+    <string name="comics_archive_import_description">You can select one or more .cbz, .zip, .epub or .pdf files, each file will be recognized as a separate manga.</string>
     <string name="folder_with_images_import_description">You can select a directory with archives or images. Each archive (or subdirectory) will be recognized as a chapter.</string>
     <string name="speed">Speed</string>
     <string name="show_on_shelf">Show on the Shelf</string>
@@ -907,4 +907,13 @@
     <string name="download_default_directory">Default directory for downloading manga</string>
     <string name="private_app_directory_warning">This directory with all data will be deleted if you uninstall the application</string>
     <string name="available_pattern">%1$s available</string>
+    <string name="novel_theme_light">Light</string>
+    <string name="novel_theme_sepia">Sepia</string>
+    <string name="novel_theme_dark">Dark</string>
+    <string name="novel_font">Font</string>
+    <string name="novel_font_serif">Serif</string>
+    <string name="novel_font_sans">Sans-serif</string>
+    <string name="novel_font_size_increase">Increase font size</string>
+    <string name="novel_font_size_decrease">Decrease font size</string>
+    <string name="novel_no_text">There is no text content in this chapter</string>
 </resources>

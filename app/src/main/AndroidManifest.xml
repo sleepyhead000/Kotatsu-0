@@ -121,6 +121,9 @@
 				android:resource="@xml/remote_action" />
 		</activity>
 		<activity
+			android:name="org.koitharu.kotatsu.reader.ui.NovelReaderActivity"
+			android:exported="false" />
+		<activity
 			android:name="org.koitharu.kotatsu.search.ui.MangaListActivity"
 			android:exported="true"
 			android:label="@string/manga_list">

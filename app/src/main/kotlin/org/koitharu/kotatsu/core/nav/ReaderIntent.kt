@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import org.koitharu.kotatsu.BuildConfig
 import org.koitharu.kotatsu.bookmarks.domain.Bookmark
+import org.koitharu.kotatsu.core.model.isNovel
 import org.koitharu.kotatsu.core.model.parcelable.ParcelableManga
 import org.koitharu.kotatsu.parsers.model.Manga
+import org.koitharu.kotatsu.reader.ui.NovelReaderActivity
 import org.koitharu.kotatsu.reader.ui.ReaderActivity
 import org.koitharu.kotatsu.reader.ui.ReaderState
 
@@ -14,7 +16,7 @@ value class ReaderIntent private constructor(
 	val intent: Intent,
 ) {
 
-	class Builder(context: Context) {
+	class Builder(private val context: Context) {
 
 		private val intent = Intent(context, ReaderActivity::class.java)
 			.setAction(ACTION_MANGA_READ)
@@ -22,6 +24,9 @@ value class ReaderIntent private constructor(
 		fun manga(manga: Manga) = apply {
 			intent.putExtra(AppRouter.KEY_MANGA, ParcelableManga(manga))
 			intent.setData(AppRouter.shortMangaUrl(manga.id))
+			if (manga.isNovel()) {
+				intent.setClass(context, NovelReaderActivity::class.java)
+			}
 		}
 
 		fun mangaId(mangaId: Long) = apply {

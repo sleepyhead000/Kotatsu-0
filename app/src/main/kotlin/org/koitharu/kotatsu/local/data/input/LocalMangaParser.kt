@@ -13,6 +13,7 @@ import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toOkioPath
 import okio.Path.Companion.toPath
+import okio.buffer
 import okio.openZip
 import org.jetbrains.annotations.Blocking
 import org.koitharu.kotatsu.core.model.LocalMangaSource
@@ -60,7 +61,7 @@ class LocalMangaParser(private val uri: Uri) {
 		(uri.resolveFsAndPath()).use { (fileSystem, rootPath) ->
 			val index = MangaIndex.read(fileSystem, rootPath / ENTRY_NAME_INDEX)
 			val mangaInfo = index?.getMangaInfo()
-			if (mangaInfo != null) {
+			val manga = if (mangaInfo != null) {
 				val coverEntry: Path? = index.getCoverEntry()?.let { rootPath / it }?.takeIf {
 					fileSystem.exists(it)
 				}
@@ -89,6 +90,42 @@ class LocalMangaParser(private val uri: Uri) {
 						null
 					},
 				)
+			} else if (rootFile.isEpub) {
+				EpubParser(rootFile).use { epub ->
+					Manga(
+						id = rootFile.absolutePath.longHashCode(),
+						title = epub.title.ifBlank { rootFile.name.fileNameToTitle() },
+						url = rootFile.toUri().toString(),
+						publicUrl = rootFile.toUri().toString(),
+						source = LocalMangaSource,
+						coverUrl = epub.coverHref?.let { uri.child(it.toPath(), resolve = false).toString() },
+						chapters = if (withDetails) {
+							epub.chapters.mapIndexed { i, chapter ->
+								MangaChapter(
+									id = "${rootFile.absolutePath}#${chapter.href}".longHashCode(),
+									title = epub.chapterTitle(chapter.href),
+									number = (i + 1).toFloat(),
+									volume = 0,
+									source = LocalMangaSource,
+									uploadDate = 0L,
+									url = uri.child(chapter.href.toPath(), resolve = false).toString(),
+									scanlator = null,
+									branch = null,
+								)
+							}
+						} else {
+							null
+						},
+						altTitles = emptySet(),
+						rating = -1f,
+						contentRating = null,
+						tags = emptySet(),
+						state = null,
+						authors = epub.authors.toSet(),
+						largeCoverUrl = null,
+						description = epub.description,
+					)
+				}
 			} else {
 				val title = rootFile.name.fileNameToTitle()
 				Manga(
@@ -138,7 +175,8 @@ class LocalMangaParser(private val uri: Uri) {
 					largeCoverUrl = null,
 					description = null,
 				)
-			}.let { LocalManga(it, rootFile) }
+			}
+			LocalManga(manga, rootFile)
 		}
 	}
 
@@ -152,6 +190,18 @@ class LocalMangaParser(private val uri: Uri) {
 	suspend fun getPages(chapter: MangaChapter): List<MangaPage> = runInterruptible(Dispatchers.IO) {
 		val chapterUri = chapter.url.toUri().resolve()
 		chapterUri.resolveFsAndPath().use { (fileSystem, rootPath) ->
+			if (rootPath.isEpubText()) {
+				val html = fileSystem.source(rootPath).use { it.buffer().readUtf8() }
+				return@runInterruptible listOf(
+					MangaPage(
+						id = chapter.url.longHashCode(),
+						url = chapter.url,
+						preview = null,
+						source = LocalMangaSource,
+						text = EpubParser.extractText(html),
+					),
+				)
+			}
 			val index = MangaIndex.read(fileSystem, rootPath / ENTRY_NAME_INDEX)
 			val entries = fileSystem.listRecursively(rootPath)
 				.filter { fileSystem.isRegularFile(it) }
@@ -247,6 +297,14 @@ class LocalMangaParser(private val uri: Uri) {
 	companion object {
 
 		private val REGEX_PARENT_PATH_PREFIX = Regex("^(/\\.\\.)+")
+
+		internal val File.isEpub: Boolean
+			get() = isFile && extension.equals("epub", ignoreCase = true)
+
+		private fun Path.isEpubText(): Boolean = when (name.substringAfterLast('.', "").lowercase()) {
+			"xhtml", "html", "htm" -> true
+			else -> false
+		}
 
 		@Blocking
 		fun getOrNull(file: File): LocalMangaParser? = if ((file.isDirectory || file.isZipArchive) && file.canRead()) {

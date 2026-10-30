@@ -74,5 +74,6 @@ class ChapterPagesTest {
 		chapterId = chapterId,
 		index = Random.nextInt(),
 		source = TestMangaSource,
+		text = null,
 	)
 }

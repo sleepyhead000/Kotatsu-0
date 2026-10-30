@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<com.google.android.material.appbar.AppBarLayout
+		android:id="@+id/appbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:elevation="@dimen/m3_card_elevated_elevation">
+
+		<com.google.android.material.appbar.MaterialToolbar
+			android:id="@id/toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:popupTheme="@style/ThemeOverlay.Kotatsu"
+			tools:menu="@menu/opt_novel_reader" />
+
+	</com.google.android.material.appbar.AppBarLayout>
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1">
+
+		<ScrollView
+			android:id="@+id/scroll_view"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:fillViewport="true"
+			android:scrollbars="vertical">
+
+			<TextView
+				android:id="@+id/text_content"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:lineSpacingMultiplier="1.4"
+				android:paddingStart="24dp"
+				android:paddingTop="16dp"
+				android:paddingEnd="24dp"
+				android:paddingBottom="32dp"
+				android:textIsSelectable="true"
+				android:textSize="18sp"
+				tools:text="Chapter text" />
+
+		</ScrollView>
+
+		<com.google.android.material.progressindicator.CircularProgressIndicator
+			android:id="@+id/progress_bar"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:indeterminate="true" />
+
+	</FrameLayout>
+
+	<LinearLayout
+		android:id="@+id/bottom_bar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		android:paddingStart="8dp"
+		android:paddingEnd="8dp">
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/button_prev"
+			style="@style/Widget.Material3.Button.TextButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/prev_chapter"
+			app:icon="@drawable/ic_prev" />
+
+		<Space
+			android:layout_width="0dp"
+			android:layout_height="1dp"
+			android:layout_weight="1" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/button_next"
+			style="@style/Widget.Material3.Button.TextButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/next_chapter"
+			app:icon="@drawable/ic_next"
+			app:iconGravity="textEnd" />
+
+	</LinearLayout>
+
+</LinearLayout>

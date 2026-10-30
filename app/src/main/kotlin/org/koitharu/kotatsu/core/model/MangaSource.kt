@@ -15,6 +15,7 @@ import org.koitharu.kotatsu.core.util.ext.getDisplayName
 import org.koitharu.kotatsu.core.util.ext.toLocale
 import org.koitharu.kotatsu.core.util.ext.toLocaleOrNull
 import org.koitharu.kotatsu.parsers.model.ContentType
+import org.koitharu.kotatsu.parsers.model.Manga
 import org.koitharu.kotatsu.parsers.model.MangaParserSource
 import org.koitharu.kotatsu.parsers.model.MangaSource
 import org.koitharu.kotatsu.parsers.util.splitTwoParts
@@ -49,6 +50,12 @@ fun MangaSource(name: String?): MangaSource {
 }
 
 fun Collection<String>.toMangaSources() = map(::MangaSource)
+
+fun MangaSource.isNovel(): Boolean = (unwrap() as? MangaParserSource)?.contentType == ContentType.NOVEL
+
+fun Manga.isNovel(): Boolean = source.isNovel() || (
+	source == LocalMangaSource && url.substringBefore('#').substringBefore('?').endsWith(".epub", ignoreCase = true)
+)
 
 fun MangaSource.isNsfw(): Boolean = when (this) {
 	is MangaSourceInfo -> mangaSource.isNsfw()

@@ -7,6 +7,7 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import okhttp3.OkHttpClient
+import org.koitharu.kotatsu.core.model.isNovel
 import org.koitharu.kotatsu.core.network.MangaHttpClient
 import org.koitharu.kotatsu.core.network.imageproxy.ImageProxyInterceptor
 import org.koitharu.kotatsu.core.parser.MangaDataRepository
@@ -34,8 +35,11 @@ class DetectReaderModeUseCase @Inject constructor(
 ) {
 
 	suspend operator fun invoke(manga: Manga, state: ReaderState?): ReaderMode {
-		dataRepository.getReaderMode(manga.id)?.let { return it }
 		val defaultMode = settings.defaultReaderMode
+		if (manga.isNovel()) {
+			return defaultMode
+		}
+		dataRepository.getReaderMode(manga.id)?.let { return it }
 		if (!settings.isReaderModeDetectionEnabled || defaultMode == ReaderMode.WEBTOON) {
 			return defaultMode
 		}

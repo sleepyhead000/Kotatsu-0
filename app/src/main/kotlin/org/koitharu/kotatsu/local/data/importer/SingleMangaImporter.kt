@@ -1,6 +1,9 @@
 package org.koitharu.kotatsu.local.data.importer
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import dagger.Reusable
@@ -24,6 +27,8 @@ import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
+private const val PDF_PAGE_WIDTH = 1240
+
 @Reusable
 class SingleMangaImporter @Inject constructor(
 	@ApplicationContext private val context: Context,
@@ -46,18 +51,50 @@ class SingleMangaImporter @Inject constructor(
 	private suspend fun importFile(uri: Uri): LocalManga = withContext(Dispatchers.IO) {
 		val contentResolver = storageManager.contentResolver
 		val name = contentResolver.resolveName(uri) ?: throw IOException("Cannot fetch name from uri: $uri")
-		if (!hasZipExtension(name)) {
-			throw UnsupportedFileException("Unsupported file $name on $uri")
+		when {
+			name.endsWith(".pdf", ignoreCase = true) -> importPdf(uri, name)
+			hasZipExtension(name) -> importArchive(uri, name)
+			else -> throw UnsupportedFileException("Unsupported file $name on $uri")
 		}
+	}
+
+	private suspend fun importArchive(uri: Uri, name: String): LocalManga {
 		val dest = File(getOutputDir(), name)
 		runInterruptible {
-			contentResolver.openSource(uri)
+			storageManager.contentResolver.openSource(uri)
 		}.use { source ->
 			dest.sink().buffer().use { output ->
 				output.writeAllCancellable(source)
 			}
 		}
-		LocalMangaParser(dest).getManga(withDetails = false)
+		return LocalMangaParser(dest).getManga(withDetails = false)
+	}
+
+	private suspend fun importPdf(uri: Uri, name: String): LocalManga {
+		val dest = File(getOutputDir(), name.substringBeforeLast('.'))
+		dest.mkdirs()
+		runInterruptible(Dispatchers.IO) {
+			val descriptor = storageManager.contentResolver.openFileDescriptor(uri, "r")
+				?: throw IOException("Cannot open $uri")
+			descriptor.use { pfd ->
+				PdfRenderer(pfd).use { renderer ->
+					for (i in 0 until renderer.pageCount) {
+						renderer.openPage(i).use { page ->
+							val width = PDF_PAGE_WIDTH
+							val height = (width * page.height.toFloat() / page.width).toInt().coerceAtLeast(1)
+							val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+							bitmap.eraseColor(Color.WHITE)
+							page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+							File(dest, "page_%04d.png".format(i + 1)).outputStream().use { out ->
+								bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+							}
+							bitmap.recycle()
+						}
+					}
+				}
+			}
+		}
+		return LocalMangaParser(dest).getManga(withDetails = false)
 	}
 
 	private suspend fun importDirectory(uri: Uri): LocalManga {

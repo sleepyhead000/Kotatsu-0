@@ -162,7 +162,7 @@ class AppShortcutManager @Inject constructor(
 			.setLongLived(true)
 			.setIntent(
 				ReaderIntent.Builder(context)
-					.mangaId(manga.id)
+					.manga(manga)
 					.build()
 					.intent,
 			).build()

@@ -16,6 +16,7 @@ data class ReaderPage(
 	val chapterId: Long,
 	val index: Int,
 	val source: MangaSource,
+	val text: String?,
 ) : Parcelable {
 
 	constructor(page: MangaPage, index: Int, chapterId: Long) : this(
@@ -25,6 +26,7 @@ data class ReaderPage(
 		chapterId = chapterId,
 		index = index,
 		source = page.source,
+		text = page.text,
 	)
 
 	fun toMangaPage() = MangaPage(
@@ -32,5 +34,6 @@ data class ReaderPage(
 		url = url,
 		preview = preview,
 		source = source,
+		text = text,
 	)
 }
