@@ -48,6 +48,9 @@ data class ChapterListItem(
 	val isBookmarked: Boolean
 		get() = hasFlag(FLAG_BOOKMARKED)
 
+	val isLocked: Boolean
+		get() = chapter.isLocked
+
 	val isNew: Boolean
 		get() = hasFlag(FLAG_NEW)
 

@@ -185,6 +185,13 @@
     <string name="read_more">Read more</string>
     <string name="queued">Queued</string>
     <string name="chapter_is_missing">The chapter is missing</string>
+    <string name="chapter_locked">This chapter is locked</string>
+    <string name="issue_email" translatable="false">khanchowdhuryn@gmail.com</string>
+    <string name="issue_report_title">Report an issue by email</string>
+    <string name="issue_report_summary">Send a bug report with app state to the developer</string>
+    <string name="issue_report_subject">Kotatsu bug report</string>
+    <string name="issue_report_body_hint">Describe what went wrong (steps to reproduce, source name, what you expected):</string>
+    <string name="report_by_email">Send by email</string>
     <string name="about_app_translation_summary">Translate this app</string>
     <string name="about_app_translation">Translation</string>
     <string name="auth_complete">Authorized</string>

@@ -44,6 +44,16 @@
 	</LinearLayout>
 
 	<ImageView
+		android:id="@+id/imageView_locked"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="?android:listPreferredItemPaddingEnd"
+		android:contentDescription="@string/chapter_locked"
+		android:visibility="gone"
+		app:srcCompat="@drawable/ic_lock"
+		tools:visibility="visible" />
+
+	<ImageView
 		android:id="@+id/imageView_bookmarked"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

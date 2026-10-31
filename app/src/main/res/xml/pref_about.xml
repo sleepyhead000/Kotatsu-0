@@ -23,6 +23,13 @@
 		android:title="@string/changelog" />
 
 	<Preference
+		android:key="about_report_issue"
+		android:persistent="false"
+		android:summary="@string/issue_report_summary"
+		android:title="@string/issue_report_title"
+		app:allowDividerAbove="true" />
+
+	<Preference
 		android:key="about_help"
 		android:persistent="false"
 		android:summary="@string/url_user_manual"

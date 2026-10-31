@@ -18,6 +18,7 @@ import org.koitharu.kotatsu.core.github.isStable
 import org.koitharu.kotatsu.core.nav.router
 import org.koitharu.kotatsu.core.prefs.AppSettings
 import org.koitharu.kotatsu.core.ui.BasePreferenceFragment
+import org.koitharu.kotatsu.core.util.IssueMailer
 import org.koitharu.kotatsu.core.util.ext.observe
 import org.koitharu.kotatsu.core.util.ext.observeEvent
 
@@ -70,6 +71,13 @@ class AboutSettingsFragment : BasePreferenceFragment(R.string.about) {
 				true
 			}
 
+			KEY_REPORT_ISSUE -> {
+				if (!IssueMailer.send(requireContext())) {
+					Snackbar.make(listView, R.string.operation_not_supported, Snackbar.LENGTH_SHORT).show()
+				}
+				true
+			}
+
 			AppSettings.KEY_LINK_TELEGRAM -> {
 				if (!openLink(R.string.url_telegram, null)) {
 					openLink(R.string.url_telegram_web, preference.title)
@@ -97,5 +105,10 @@ class AboutSettingsFragment : BasePreferenceFragment(R.string.about) {
 	} else {
 		Snackbar.make(listView, R.string.operation_not_supported, Snackbar.LENGTH_SHORT).show()
 		false
+	}
+
+	companion object {
+
+		private const val KEY_REPORT_ISSUE = "about_report_issue"
 	}
 }

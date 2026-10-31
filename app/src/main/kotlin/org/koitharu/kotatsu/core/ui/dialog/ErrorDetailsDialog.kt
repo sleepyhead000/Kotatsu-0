@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -12,6 +13,7 @@ import org.koitharu.kotatsu.core.github.AppUpdateRepository
 import org.koitharu.kotatsu.core.nav.AppRouter
 import org.koitharu.kotatsu.core.nav.router
 import org.koitharu.kotatsu.core.ui.AlertDialogFragment
+import org.koitharu.kotatsu.core.util.IssueMailer
 import org.koitharu.kotatsu.core.util.ext.copyToClipboard
 import org.koitharu.kotatsu.core.util.ext.getCauseUrl
 import org.koitharu.kotatsu.core.util.ext.isHttpUrl
@@ -43,6 +45,7 @@ class ErrorDetailsDialog : AlertDialogFragment<DialogErrorDetailsBinding>(), Vie
 	override fun onViewBindingCreated(binding: DialogErrorDetailsBinding, savedInstanceState: Bundle?) {
 		super.onViewBindingCreated(binding, savedInstanceState)
 		binding.buttonBrowser.setOnClickListener(this)
+		binding.buttonEmail.setOnClickListener(this)
 		binding.textViewSummary.text = exception.message
 		val isUrlAvailable = exception.getCauseUrl()?.isHttpUrl() == true
 		binding.buttonBrowser.isVisible = isUrlAvailable
@@ -82,10 +85,16 @@ class ErrorDetailsDialog : AlertDialogFragment<DialogErrorDetailsBinding>(), Vie
 	}
 
 	override fun onClick(v: View) {
-		router.openBrowser(
-			url = exception.getCauseUrl() ?: return,
-			source = null,
-			title = null,
-		)
+		when (v.id) {
+			R.id.button_email -> if (!IssueMailer.send(requireContext(), exception)) {
+				Toast.makeText(requireContext(), R.string.operation_not_supported, Toast.LENGTH_SHORT).show()
+			}
+
+			else -> router.openBrowser(
+				url = exception.getCauseUrl() ?: return,
+				source = null,
+				title = null,
+			)
+		}
 	}
 }

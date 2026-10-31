@@ -56,6 +56,7 @@ fun chapterListItemAD(
 				binding.textViewDescription.typeface = Typeface.DEFAULT
 			}
 		}
+		binding.imageViewLocked.isVisible = item.isLocked
 		binding.imageViewBookmarked.isVisible = item.isBookmarked
 		binding.imageViewDownloaded.isVisible = item.isDownloaded
 	}

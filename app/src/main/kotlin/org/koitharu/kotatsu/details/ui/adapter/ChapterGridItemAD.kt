@@ -27,6 +27,7 @@ fun chapterGridItemAD(
 		}
 		binding.imageViewNew.isVisible = item.isNew
 		binding.imageViewCurrent.isVisible = item.isCurrent
+		binding.imageViewLocked.isVisible = item.isLocked
 		binding.imageViewBookmarked.isVisible = item.isBookmarked
 		binding.imageViewDownloaded.isVisible = item.isDownloaded
 

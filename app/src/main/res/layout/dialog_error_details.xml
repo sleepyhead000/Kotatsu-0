@@ -45,6 +45,15 @@
 			android:layout_marginTop="8dp"
 			tools:text="@string/error_disclaimer_report" />
 
+		<Button
+			android:id="@+id/button_email"
+			style="?materialButtonTonalStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:layout_marginTop="10dp"
+			android:text="@string/report_by_email" />
+
 	</LinearLayout>
 
 </ScrollView>

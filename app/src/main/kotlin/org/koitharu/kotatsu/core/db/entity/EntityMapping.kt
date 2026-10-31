@@ -59,6 +59,7 @@ fun ChapterEntity.toMangaChapter() = MangaChapter(
 	uploadDate = uploadDate,
 	branch = branch,
 	source = MangaSource(source),
+	isLocked = isLocked,
 )
 
 fun Collection<ChapterEntity>.toMangaChapters() = map { it.toMangaChapter() }
@@ -104,6 +105,7 @@ fun Iterable<IndexedValue<MangaChapter>>.toEntities(mangaId: Long) = map { (inde
 		branch = chapter.branch,
 		source = chapter.source.name,
 		index = index,
+		isLocked = chapter.isLocked,
 	)
 }
 
